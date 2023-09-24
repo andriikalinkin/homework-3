@@ -26,11 +26,10 @@ def tracks_data() -> list:
 
     for _ in range(100):
         artist = fake.first_name()
-        title = fake.catch_phrase()
         length = randint(120, 600)
         year = fake.random_int(min=1950, max=2023)
 
-        data.append((artist, title, length, year))
+        data.append((artist, length, year))
 
     return data
 
@@ -54,11 +53,10 @@ def init_db() -> None:
     cursor.execute("""CREATE TABLE IF NOT EXISTS tracks (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     artist VARCHAR(50),
-                    title VARCHAR(50),
                     length INT,
                     year INT);
     """)
-    cursor.executemany("INSERT INTO tracks (artist, title, length, year) VALUES (?, ?, ?, ?)", tracks_data())
+    cursor.executemany("INSERT INTO tracks (artist, length, year) VALUES (?, ?, ?)", tracks_data())
 
     connection.commit()
     cursor.close()
@@ -68,17 +66,12 @@ def init_db() -> None:
 
 def get_distinct_names() -> list:
     """Get all distinct names from `customer` table."""
-    data = []
-
     connection = sqlite3.connect("project_db.db")
     cursor = connection.cursor()
 
-    cursor.execute("SELECT DISTINCT first_name FROM customers;")
+    cursor.execute("SELECT COUNT(DISTINCT first_name) FROM customers;")
 
-    for i in cursor.fetchall():
-        data.append(i)
-
-    return data
+    return cursor.fetchone()
 
 
 def get_tracks_quantity() -> list:
@@ -98,7 +91,7 @@ def get_all_tracks_content() -> list:
     connection = sqlite3.connect("project_db.db")
     cursor = connection.cursor()
 
-    cursor.execute("SELECT  id, artist, title, length, year FROM tracks;")
+    cursor.execute("SELECT  id, artist, length, year FROM tracks;")
 
     for i in cursor.fetchall():
         data.append(i)
