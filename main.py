@@ -18,14 +18,16 @@ def names():
     return render_template("names.html", data=data)
 
 
-# @app.route("/tracks")
-# def tracks():
-#     pass
-#
-#
-# @app.route("/tracks-sec")
-# def tracks_sec():
-#     pass
+@app.route("/tracks")
+def tracks():
+    data = project_db.get_tracks_quantity()
+    return render_template("tracks.html", data=data)
+
+
+@app.route("/tracks-sec")
+def tracks_sec():
+    data = project_db.get_all_tracks_content()
+    return render_template("tracks-sec.html", data=data)
 
 
 if __name__ == "__main__":

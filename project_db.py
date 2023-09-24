@@ -40,12 +40,16 @@ def init_db() -> None:
     connection = sqlite3.connect("project_db.db")
     cursor = connection.cursor()
 
+    cursor.execute("DROP TABLE IF EXISTS customers")
+
     cursor.execute("""CREATE TABLE IF NOT EXISTS customers (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                         first_name VARCHAR(50),
                         last_name VARCHAR(50));
     """)
     cursor.executemany("INSERT INTO customers (first_name, last_name) VALUES (?, ?)", customers_data())
+
+    cursor.execute("DROP TABLE IF EXISTS tracks")
 
     cursor.execute("""CREATE TABLE IF NOT EXISTS tracks (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
